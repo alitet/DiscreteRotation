@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{6963c5e6-4353-4197-b9f4-f926488cba84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="image">
+      <UniqueIdentifier>{7c81d592-7d8f-44d0-ba52-ca5e8f26c774}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="core\main.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="image\image.cpp">
+      <Filter>image</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="image\image.h">
+      <Filter>image</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
