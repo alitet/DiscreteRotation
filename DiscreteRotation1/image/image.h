@@ -15,3 +15,7 @@ void DrawCenterRefGrid(uint16_t w, uint16_t h, uint16_t gap);
 std::vector<sImgData> LoadImageCenterGap(const char* fname);
 void DrawImageCenter(uint16_t w, uint16_t h, uint16_t gap, const std::vector<sImgData>& img);
 
+void DrawCenterRefCross(uint16_t w, uint16_t h, uint16_t gap);
+
+const std::vector<sImgData> rotateForward(const std::vector<sImgData>& img, float deg);
+

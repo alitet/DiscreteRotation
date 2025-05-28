@@ -4,45 +4,45 @@
 
 int main()
 {
-  // Initialization
-//--------------------------------------------------------------------------------------
-  const int screenWidth = 800;
-  const int screenHeight = 600;
+  // Init
+  const int scW = 800;
+  const int scH = 600;
 
-  InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+  InitWindow(scW, scH, "raylib [core] example - basic window");
 
-  SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
-  //--------------------------------------------------------------------------------------
+  SetTargetFPS(60);
 
   auto pxarr = LoadImageCenterGap("resources/cone10p10.png");
+  auto rtarr = pxarr;
 
-  // Main game loop
-  while (!WindowShouldClose())    // Detect window close button or ESC key
+  float rang = 0.f;
+
+  while (!WindowShouldClose())    //close button or ESC key
   {
     // Update
-    //----------------------------------------------------------------------------------
-    // TODO: Update your variables here
-    //----------------------------------------------------------------------------------
+    //if (IsKeyDown(KEY_DOWN)) {
+    //  rang += 6.f;
+    //  if (rang > 360.f) { rang -= 360.f; }
+    //  rtarr = rotateForward(pxarr, rang);
+    //}
 
     // Draw
-    //----------------------------------------------------------------------------------
     BeginDrawing();
 
     ClearBackground(LIGHTGRAY);
 
-    DrawCenterRefGrid(screenWidth, screenHeight, 10);
+    DrawCenterRefGrid(scW, scH, 10);
     DrawText("Discrete Grid Rotation", 10, 10, 10, DARKGRAY);
 
-    DrawImageCenter(screenWidth, screenHeight, 10, pxarr);
+    DrawImageCenter(scW, scH, 10, rtarr);
 
+
+    DrawCenterRefCross(scW, scH, 10);
     EndDrawing();
-    //----------------------------------------------------------------------------------
   }
 
   // De-Initialization
-  //--------------------------------------------------------------------------------------
-  CloseWindow();        // Close window and OpenGL context
-  //--------------------------------------------------------------------------------------
+  CloseWindow();
 
   return 0;
 }
