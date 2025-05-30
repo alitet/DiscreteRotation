@@ -93,26 +93,59 @@ void rotateForward(const sImgData& imgIN, sImgData& imgOUT, float deg)
   }  
 }
 
+bool getImgCoordColor(const std::vector<sPixelData>& pixels, uint16_t x, uint16_t y, Color &color)
+{
+  for (const sPixelData& pxd : pixels) {
+    if (pxd.xs == x && pxd.ys == y) {
+      color = pxd.pixel;
+      return true;
+    }
+  }
+  return false;
+}
+
 void rotateBackward(const sImgData& imgIN, sImgData& imgOUT, float deg)
 {
-  //int16_t maxv = 0;
-  //if (imgIN.ws > imgIN.hs) {
+  int16_t minW = static_cast<int16_t>(imgIN.ws / 2);
+  int16_t maxW = imgIN.ws - minW;
+  int16_t minH = static_cast<int16_t>(imgIN.hs / 2);
+  int16_t maxH = imgIN.hs - minH;
 
-  //}
-  int16_t maxSide = imgIN.ws > imgIN.hs ? imgIN.ws : imgIN.hs;
-  int16_t minHf = static_cast<int16_t>(maxSide / 2);
-  int16_t maxHf = maxSide - minHf;
+  //int16_t maxSide = imgIN.ws > imgIN.hs ? imgIN.ws : imgIN.hs;
+  //int16_t minHf = static_cast<int16_t>(maxSide / 2);
+  //int16_t maxHf = maxSide - minHf;
+  int16_t maxHf = maxW > maxH ? maxW : maxH;
+  deg *= DEG2RAD;
   float cosdg = cosf(deg);
   float sindg = sinf(deg);
 
-  for (uint16_t j = -maxHf; j < maxHf; j++) {
-    for (uint16_t i = -maxHf; i < maxHf; i++) {
-      const sPixelData& poi = imgIN.pixels[i];
-      float fx = (poi.xs * cosdg) + (poi.ys * sindg);
-      float fy = (poi.xs * -sindg) + (poi.ys * cosdg);
+  for (int16_t j = -maxHf; j < maxHf; j++) {
+    for (int16_t i = -maxHf; i < maxHf; i++) {
+      float fx = (i * cosdg) + (j * sindg);
+      float fy = (i * -sindg) + (j * cosdg);
       int16_t cx = static_cast<int16_t>(roundf(fx));
       int16_t cy = static_cast<int16_t>(roundf(fy));
-      // if the point is in the image take the color from there
+
+      //const sPixelData& poi = imgIN.pixels[i];
+      if (cx >= -minW && cx < maxW && cy >= -minH && cy < maxH) {
+        Color lcolor;
+        if (getImgCoordColor(imgIN.pixels, cx, cy, lcolor)) {
+          imgOUT.pixels[i].xs = i;  imgOUT.pixels[i].ys = j;
+          imgOUT.pixels[i].pixel = lcolor;
+        }
+      }
     }
   }
+}
+
+void moveImage(const sImgData& imgIN, sImgData& imgOUT, uint16_t x, uint16_t y)
+{
+  for (uint16_t i = 0; i < imgIN.pixels.size(); i++) {
+    sPixelData pdt = imgIN.pixels[i];
+    imgOUT.pixels[i].xs = pdt.xs + x;
+    imgOUT.pixels[i].ys = pdt.ys + y;
+    imgOUT.pixels[i].pixel = pdt.pixel;
+  }
+  imgOUT.ws = imgIN.ws;
+  imgOUT.hs = imgIN.hs;
 }

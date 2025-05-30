@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <vector>
 
+
+
 struct sPixelData {
 	int16_t xs;
 	int16_t ys;
@@ -25,5 +27,7 @@ void DrawCenterRefCross(uint16_t w, uint16_t h, uint16_t gap);
 
 void rotateForward(const sImgData& imgIN, sImgData& imgOUT, float deg);
 void rotateBackward(const sImgData& imgIN, sImgData& imgOUT, float deg);
+
+void moveImage(const sImgData& imgIN, sImgData& imgOUT, uint16_t x, uint16_t y);
 
 
