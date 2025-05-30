@@ -4,18 +4,26 @@
 #include <cstdint>
 #include <vector>
 
+struct sPixelData {
+	int16_t xs;
+	int16_t ys;
+	Color pixel;
+};
+
 struct sImgData {
 	int16_t ws;
 	int16_t hs;
-	Color pixel;
+	std::vector<sPixelData> pixels;
 };
 
 void DrawCenterRefGrid(uint16_t w, uint16_t h, uint16_t gap);
 
-std::vector<sImgData> LoadImageCenterGap(const char* fname);
-void DrawImageCenter(uint16_t w, uint16_t h, uint16_t gap, const std::vector<sImgData>& img);
+sImgData LoadImageCenterGap(const char* fname);
+void DrawImageCenter(uint16_t w, uint16_t h, uint16_t gap, const sImgData& img);
 
 void DrawCenterRefCross(uint16_t w, uint16_t h, uint16_t gap);
 
-const std::vector<sImgData> rotateForward(const std::vector<sImgData>& img, float deg);
+void rotateForward(const sImgData& imgIN, sImgData& imgOUT, float deg);
+void rotateBackward(const sImgData& imgIN, sImgData& imgOUT, float deg);
+
 

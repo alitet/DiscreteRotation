@@ -21,9 +21,9 @@ bool isKeyColor(const Color& clr)
   return clr.r == 255 && clr.g == 0 && clr.b == 255;
 }
 
-std::vector<sImgData> LoadImageCenterGap(const char* fname)
+sImgData LoadImageCenterGap(const char* fname)
 {
-  std::vector<sImgData> retvec;
+  sImgData retvec;
 
   Image image = LoadImage(fname);
   std::cout << "[" << image.width << "," << image.height << "]" << std::endl;
@@ -43,25 +43,24 @@ std::vector<sImgData> LoadImageCenterGap(const char* fname)
         idx++;
         continue;
       }
-      sImgData dtaa{ i, j, clrs[idx] };
-      retvec.push_back(dtaa);
+      sPixelData dtaa{ i, j, clrs[idx] };
+      retvec.pixels.push_back(dtaa);
       idx++;
     }
   }
-
   UnloadImage(image);
+  retvec.ws = image.width;
+  retvec.hs = image.height;
   return retvec;
 }
 
-void DrawImageCenter(uint16_t w, uint16_t h, uint16_t gap, const std::vector<sImgData>& img)
+void DrawImageCenter(uint16_t w, uint16_t h, uint16_t gap, const sImgData& img)
 {
   int16_t cenW = static_cast<int16_t>(w / 2);
   int16_t cenH = static_cast<int16_t>(h / 2);
-  for (const sImgData& poi : img) {
-    //int16_t dix = poi.ws > 0 ? poi.ws - 1 : poi.ws;
-    //int16_t diy = poi.hs < 0 ? poi.hs + 1 : poi.hs;
-    int16_t xpos = cenW + (poi.ws * gap);
-    int16_t ypos = cenH - (poi.hs * gap);
+  for (const sPixelData& poi : img.pixels) {
+    int16_t xpos = cenW + (poi.xs * gap);
+    int16_t ypos = cenH - (poi.ys * gap);
     DrawRectangle(xpos, ypos, gap, gap, poi.pixel);
   }
 }
@@ -74,23 +73,46 @@ void DrawCenterRefCross(uint16_t w, uint16_t h, uint16_t gap)
   DrawLine(cenW - gap, cenH, cenW + gap, cenH, RED);
 }
 
-const std::vector<sImgData> rotateForward(const std::vector<sImgData>& img, float deg)
-{
-  std::vector<sImgData> retvec;
+void rotateForward(const sImgData& imgIN, sImgData& imgOUT, float deg)
+{  
   deg *= DEG2RAD;
-
-  for (const sImgData& poi : img) {
-    int16_t crx = poi.ws > 0 ? poi.ws - 1 : poi.ws;
-    int16_t cry = poi.hs > 0 ? poi.hs - 1 : poi.hs;
-    float fx = (crx * cosf(deg)) - (cry * sinf(deg));
-    float fy = (crx * sinf(deg)) + (cry * cosf(deg));
+  float cosdg = cosf(deg);
+  float sindg = sinf(deg);
+  size_t insz = imgIN.pixels.size();
+  for (uint16_t i = 0; i < insz; i++)
+  {
+    const sPixelData &poi = imgIN.pixels[i];
+    float fx = (poi.xs * cosdg) - (poi.ys * sindg);
+    float fy = (poi.xs * sindg) + (poi.ys * cosdg);
 
     int16_t cx = static_cast<int16_t>(roundf(fx));
     int16_t cy = static_cast<int16_t>(roundf(fy));
 
-    int16_t stx = cx >= 0 ? cx + 1 : cx;
-    int16_t sty = cy >= 0 ? cy + 1 : cy;
-    retvec.push_back({ stx, sty, poi.pixel });
+    imgOUT.pixels[i].xs = cx;  imgOUT.pixels[i].ys = cy;
+    imgOUT.pixels[i].pixel = poi.pixel;
+  }  
+}
+
+void rotateBackward(const sImgData& imgIN, sImgData& imgOUT, float deg)
+{
+  //int16_t maxv = 0;
+  //if (imgIN.ws > imgIN.hs) {
+
+  //}
+  int16_t maxSide = imgIN.ws > imgIN.hs ? imgIN.ws : imgIN.hs;
+  int16_t minHf = static_cast<int16_t>(maxSide / 2);
+  int16_t maxHf = maxSide - minHf;
+  float cosdg = cosf(deg);
+  float sindg = sinf(deg);
+
+  for (uint16_t j = -maxHf; j < maxHf; j++) {
+    for (uint16_t i = -maxHf; i < maxHf; i++) {
+      const sPixelData& poi = imgIN.pixels[i];
+      float fx = (poi.xs * cosdg) + (poi.ys * sindg);
+      float fy = (poi.xs * -sindg) + (poi.ys * cosdg);
+      int16_t cx = static_cast<int16_t>(roundf(fx));
+      int16_t cy = static_cast<int16_t>(roundf(fy));
+      // if the point is in the image take the color from there
+    }
   }
-  return retvec;
 }

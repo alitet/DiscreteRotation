@@ -1,6 +1,6 @@
 #include "..\raylib\raylib.h"
 #include "..\image\image.h"
-
+#include <iostream>
 
 int main()
 {
@@ -13,18 +13,21 @@ int main()
   SetTargetFPS(60);
 
   auto pxarr = LoadImageCenterGap("resources/cone10p10.png");
-  auto rtarr = pxarr;
+  sImgData rtarr{ pxarr.ws, pxarr.hs, {pxarr.pixels.begin(), pxarr.pixels.end()} };
 
   float rang = 0.f;
 
   while (!WindowShouldClose())    //close button or ESC key
   {
     // Update
-    //if (IsKeyDown(KEY_DOWN)) {
-    //  rang += 6.f;
-    //  if (rang > 360.f) { rang -= 360.f; }
-    //  rtarr = rotateForward(pxarr, rang);
-    //}
+    //float dtime = GetFrameTime();
+
+    if (IsKeyDown(KEY_UP)) {
+      rang += 6.f;
+      if (rang >= 360.f) { rang -= 360.f; }
+      //std::cout << "rot: " << rang << std::endl;
+      rotateForward(pxarr, rtarr, rang);
+    }
 
     // Draw
     BeginDrawing();
