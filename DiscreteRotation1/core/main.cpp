@@ -17,15 +17,18 @@ int main()
   const int16_t BCKX = -12;
   const int16_t BCKY = 10;
 
-  InitWindow(scW, scH, "raylib [core] example - basic window");
+  InitWindow(scW, scH, "raylib rotation discrete");
 
   SetTargetFPS(60);
 
-  auto pxarr = LoadImageCenterGap("resources/cone10p10.png");
+  sImgData pxarr = LoadImageLinear("resources/cone10p10.png");
   //auto pxarr = LoadImageCenterGap("resources/nave11p11.png");
 
-
-
+  sImgData canvarr = GetCanvasImage(pxarr);
+  sImgData canvarr2 = GetCanvasImage(pxarr);
+  
+  rotateForward(pxarr, canvarr, 0.f);
+  rotateBackward(pxarr, canvarr2, 0.f);
   //sImgData rtarrFW{ pxarr.ws, pxarr.hs, {pxarr.pixels.begin(), pxarr.pixels.end()} };
   //sImgData mvarrFW; //mvarrFW.pixels.resize(rtarrFW.pixels.size());
   //moveImage(rtarrFW, mvarrFW, FWDX, FWDY);
@@ -42,18 +45,18 @@ int main()
     // Update
     //float dtime = GetFrameTime();
 
-    //if (IsKeyDown(KEY_UP)) {
-    //  rang += 6.f;
-    //  if (rang >= 360.f) { rang -= 360.f; }
-    //  //std::cout << "rot: " << rang << std::endl;
-    //  rotateForward(pxarr, rtarrFW, rang);
-    //  moveImage(rtarrFW, mvarrFW, FWDX, FWDY);
-    //  //moveImage(rtarrFW, mvarrFW, 0, 0);
+    if (IsKeyDown(KEY_UP)) {
+      rang += 6.f;
+      if (rang >= 360.f) { rang -= 360.f; }
+      //std::cout << "rot: " << rang << std::endl;
+      rotateForward(pxarr, canvarr, rang);
+      //moveImage(rtarrFW, mvarrFW, FWDX, FWDY);
+      //moveImage(rtarrFW, mvarrFW, 0, 0);
 
-    //  rotateBackward(pxarr, rtarrBK, rang);
-    //  moveImage(rtarrBK, mvarrBK, BCKX, BCKY);
-    //  //moveImage(rtarrBK, mvarrBK, BCKX, BCKY);
-    //}
+      rotateBackward(pxarr, canvarr2, rang);
+      //moveImage(rtarrBK, mvarrBK, BCKX, BCKY);
+      //moveImage(rtarrBK, mvarrBK, BCKX, BCKY);
+    }
 
     // Draw
     BeginDrawing();
@@ -63,9 +66,10 @@ int main()
     DrawCenterRefGrid(scW, scH, 10);
     DrawText("Discrete Grid Rotation", 10, 10, 10, DARKGRAY);
 
-    DrawImageCenter(scW, scH, 10, pxarr);// mvarrFW);
+    //DrawImageCenter(scW, scH, 10, canvarr);// pxarr);// mvarrFW);
+    DrawImageAtPos(scW, scH, 10, canvarr, 12, 12);
 
-   // DrawImageCenter(scW, scH, 10, mvarrBK);
+    DrawImageCenter(scW, scH, 10, canvarr2);
 
 
     DrawCenterRefCross(scW, scH, 10);
