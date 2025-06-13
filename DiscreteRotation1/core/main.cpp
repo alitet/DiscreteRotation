@@ -8,14 +8,11 @@ int main()
   const int scW = 800;
   const int scH = 600;
 
-  const int16_t FWDX = 12;
-  const int16_t FWDY = 10;
+  const int16_t FWDX = 18;
+  const int16_t FWDY = 16;
 
-  //const int16_t FWDX = 0;
-  //const int16_t FWDY = 0;
-
-  const int16_t BCKX = -12;
-  const int16_t BCKY = 10;
+  const int16_t BCKX = -18;
+  const int16_t BCKY = 16;
 
   InitWindow(scW, scH, "raylib rotation discrete");
 
@@ -26,9 +23,14 @@ int main()
 
   sImgData canvarr = GetCanvasImage(pxarr);
   sImgData canvarr2 = GetCanvasImage(pxarr);
+  sImgData canvabaj = GetCanvasImageFull(pxarr);
   
   rotateForward(pxarr, canvarr, 0.f);
   rotateBackward(pxarr, canvarr2, 0.f);
+
+  rotateRealBresen(pxarr, canvabaj, 0.f);
+
+  //rotate
   //sImgData rtarrFW{ pxarr.ws, pxarr.hs, {pxarr.pixels.begin(), pxarr.pixels.end()} };
   //sImgData mvarrFW; //mvarrFW.pixels.resize(rtarrFW.pixels.size());
   //moveImage(rtarrFW, mvarrFW, FWDX, FWDY);
@@ -67,10 +69,11 @@ int main()
     DrawText("Discrete Grid Rotation", 10, 10, 10, DARKGRAY);
 
     //DrawImageCenter(scW, scH, 10, canvarr);// pxarr);// mvarrFW);
-    DrawImageAtPos(scW, scH, 10, canvarr, 12, 12);
+    DrawImageCenterAtPos(scW, scH, 10, canvarr, FWDX, FWDY);
 
-    DrawImageCenter(scW, scH, 10, canvarr2);
+    DrawImageCenterAtPos(scW, scH, 10, canvarr2, BCKX, FWDY);
 
+    DrawImageBottomLeft(scW, scH, 10, pxarr);
 
     DrawCenterRefCross(scW, scH, 10);
     EndDrawing();

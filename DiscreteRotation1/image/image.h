@@ -40,17 +40,20 @@ void DrawCenterRefGrid(uint16_t w, uint16_t h, uint16_t gap);
 
 sImgData LoadImageLinear(const char* fname);
 void DrawImageCenter(uint16_t w, uint16_t h, uint16_t gap, const sImgData& img);
-void DrawImageAtPos(uint16_t w, uint16_t h, uint16_t gap, const sImgData& img, int16_t pdx, int16_t pdy);
+void DrawImageCenterAtPos(uint16_t w, uint16_t h, uint16_t gap, const sImgData& img, int16_t pdx, int16_t pdy);
+
+void DrawImageBottomLeft(uint16_t w, uint16_t h, uint16_t gap, const sImgData& img);
 
 sImgData GetCanvasImage(const sImgData& iniImg);
+sImgData GetCanvasImageFull(const sImgData& iniImg);
 
 void DrawCenterRefCross(uint16_t w, uint16_t h, uint16_t gap);
 
 void rotateForward(const sImgData& imgIN, sImgData& cnvOUT, float deg);
 void rotateBackward(const sImgData& imgIN, sImgData& cnvOUT, float deg);
-void rotateFastBresen(const sImgData& imgIN, sImgData& imgOUT, float deg);
+void rotateRealBresen(const sImgData& imgIN, sImgData& cnvOUT, float deg);
 
-void moveImage(const sImgData& img, sImgData& out, uint16_t x, uint16_t y);
+//void moveImage(const sImgData& img, sImgData& out, uint16_t x, uint16_t y);
 //void moveImage(sImgData& img, uint16_t x, uint16_t y);
 
 

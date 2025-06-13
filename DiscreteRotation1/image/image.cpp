@@ -108,7 +108,24 @@ void DrawImageCenter(uint16_t w, uint16_t h, uint16_t gap, const sImgData& img)
   }
 }
 
-void DrawImageAtPos(uint16_t w, uint16_t h, uint16_t gap, const sImgData& img, int16_t pdx, int16_t pdy)
+void DrawImageBottomLeft(uint16_t w, uint16_t h, uint16_t gap, const sImgData& img)
+{
+  int16_t cenW = static_cast<int16_t>(w / 2);
+  int16_t cenH = static_cast<int16_t>(h / 2);
+  auto [ws, hs] = img.getImageSize();
+
+  for (int16_t j = hs - 1; j >= 0; j--) {
+    for (int16_t i = 0; i < ws; i++) {
+      int16_t xpos = cenW + (i * gap);
+      int16_t ypos = cenH - (j * gap);
+      Color clr = img.getPixelLowLeft(i, j);
+      if (isKeyColor(clr)) { continue; }
+      DrawRectangle(xpos, ypos - gap, gap, gap, clr);
+    }
+  }
+}
+
+void DrawImageCenterAtPos(uint16_t w, uint16_t h, uint16_t gap, const sImgData& img, int16_t pdx, int16_t pdy)
 {
   int16_t cenW = static_cast<int16_t>(w / 2);
   int16_t cenH = static_cast<int16_t>(h / 2);
@@ -131,16 +148,21 @@ sImgData GetCanvasImage(const sImgData& iniImg)
 {
   auto dims = iniImg.getImageDims();
   int16_t maxdm = dims.maxh > dims.maxw ? dims.maxh : dims.maxw;
-  maxdm = 2 * static_cast<int16_t>(1.4142135624f * maxdm) + 1;
+  maxdm = 2 * (static_cast<int16_t>(1.4142135624f * maxdm) + 1);
   sImgData imgRet(maxdm, maxdm);
   imgRet.clearAllPixel();
 
-  //for (int16_t j = dims.maxh - 1; j >= -dims.minh; j--) {
-  //  for (int16_t i = -dims.minw; i < dims.maxw; i++) {
-  //    Color clr = iniImg.getPixel(i, j);
-  //    imgRet.setPixel(i, j, clr);
-  //  }
-  //}
+  return imgRet;
+}
+
+sImgData GetCanvasImageFull(const sImgData& iniImg)
+{
+  auto [ws, hs] = iniImg.getImageSize();
+  float esq = static_cast<float>(ws * ws + hs * hs);
+  int16_t maxdm = 2 * (static_cast<int16_t>(sqrtf(esq)) + 1);
+  sImgData imgRet(maxdm, maxdm);
+  imgRet.clearAllPixel();
+
   return imgRet;
 }
 
@@ -203,66 +225,61 @@ void rotateBackward(const sImgData& imgIN, sImgData& cnvOUT, float deg)
   }
 }
 
-void rotateFastBresen(const sImgData& imgIN, sImgData& imgOUT, float deg)
+void rotateRealBresen(const sImgData& imgIN, sImgData& cnvOUT, float deg)
 {
-  //imgOUT.pixels.clear();
-  //imgOUT.pixels.resize(imgIN.pixels.size());
+  cnvOUT.clearAllPixel();
 
-  ////int16_t minW = static_cast<int16_t>(imgIN.ws / 2);
-  ////int16_t maxW = imgIN.ws - minW;
-  ////int16_t minH = static_cast<int16_t>(imgIN.hs / 2);
-  ////int16_t maxH = imgIN.hs - minH;
-  //int16_t hx = 2 * imgIN.hs;
-  //int16_t wx = 2 * imgIN.ws;
+  auto [ws, hs] = imgIN.getImageSize();
+  auto [wx, hx] = cnvOUT.getImageSize();
 
+  deg *= DEG2RAD;
+  float cosdg = cosf(deg);
+  float sindg = sinf(deg);
+  float ex = 0; float ey = 0;
+  for (uint16_t j = 0; j < hx - 1; j++)
+  {
+    float lx = j * sindg, ly = j * cosdg;
+    int16_t m = static_cast<int16_t>(lx);
+    int16_t n = static_cast<int16_t>(ly);
+    ex = lx - m; ey = ly - n;
+    for (uint16_t i = 0; i < wx - 1; i++)
+    {
+      int16_t x1 = m; int16_t y1 = n;
+      if (ex > 0.5f) {
+        m = m + 1; 
+        ex = ex - 1;
+      }
+      if (ey < -0.5f) {
+        n = n - 1;
+        ey = ey + 1;
+      }
+      float tmpex = ex;
+      ex = tmpex + cosdg;
+      ey = tmpex - sindg;
+      if (x1 < 0 || x1 > ws - 1 || y1 < 0 || y1 > hs - 1) {
+        continue;
+      }
+      else {
+        Color clr = imgIN.getPixelLowLeft(x1, y1);
+        cnvOUT.setPixelLowLeft(i, j, clr);
+      }
 
-  //deg *= DEG2RAD;
-  //float cosdg = cosf(deg);
-  //float sindg = sinf(deg);
-  //float ex = 0; float ey = 0;
-  //for (uint16_t j = 0; j < hx - 1; j++)
-  //{
-  //  float lx = j * sindg, ly = j * cosdg;
-  //  int16_t m = static_cast<int16_t>(lx);
-  //  int16_t n = static_cast<int16_t>(ly);
-  //  ex = lx - m; ey = ly - n;
-  //  for (uint16_t i = 0; i < wx - 1; i++)
-  //  {
-  //    int16_t x1 = m; int16_t y1 = n;
-  //    if (ex > 0.5f) {
-  //      m = m + 1; 
-  //      ex = ex - 1;
-  //    }
-  //    if (ey < -0.5f) {
-  //      n = n - 1;
-  //      ey = ey + 1;
-  //    }
-  //    ex = ex + cosdg;
-  //    ey = ex - sindg;
-  //    if (x1 < 0 || x1> imgIN.ws - 1 || y1<0 || y1 > imgIN.hs - 1) {
-  //      continue;
-  //    }
-  //    else {
-  //      //imgOUT
-  //    }
-
-  //  }
-  //}
-
+    }
+  }
 }
 
-void moveImage(const sImgData& img, sImgData& out, uint16_t x, uint16_t y)
-{
-  //out.pixels.clear();
-  //out.pixels.resize(img.pixels.size());
-  //for (uint16_t i = 0; i < img.pixels.size(); i++) {
-  //  sPixelData pdt = img.pixels[i];
-  //  out.pixels[i].xs = pdt.xs + x;
-  //  out.pixels[i].ys = pdt.ys + y;
-  //  out.pixels[i].pixel = pdt.pixel;
-  //}
-  //out.ws = img.ws;
-  //out.hs = img.hs;
-}
+//void moveImage(const sImgData& img, sImgData& out, uint16_t x, uint16_t y)
+//{
+//  out.pixels.clear();
+//  out.pixels.resize(img.pixels.size());
+//  for (uint16_t i = 0; i < img.pixels.size(); i++) {
+//    sPixelData pdt = img.pixels[i];
+//    out.pixels[i].xs = pdt.xs + x;
+//    out.pixels[i].ys = pdt.ys + y;
+//    out.pixels[i].pixel = pdt.pixel;
+//  }
+//  out.ws = img.ws;
+//  out.hs = img.hs;
+//}
 
 
