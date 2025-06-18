@@ -20,8 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\main.cpp" />
+    <ClCompile Include="image\vixel.cpp" />
     <ClInclude Include="image\image.h" />
     <ClCompile Include="image\image.cpp" />
+    <ClInclude Include="image\vixel.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

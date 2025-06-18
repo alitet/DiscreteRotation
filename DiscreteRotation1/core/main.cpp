@@ -73,7 +73,7 @@ int main()
 
     DrawImageCenterAtPos(scW, scH, 10, canvarr2, BCKX, FWDY);
 
-    DrawImageBottomLeft(scW, scH, 10, pxarr);
+    DrawImageBottomLeft(scW, scH, 10, canvabaj);
 
     DrawCenterRefCross(scW, scH, 10);
     EndDrawing();
