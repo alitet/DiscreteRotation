@@ -18,12 +18,18 @@
     <ClCompile Include="image\vixel.cpp">
       <Filter>image</Filter>
     </ClCompile>
+    <ClCompile Include="image\VixelRender.cpp">
+      <Filter>image</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="image\image.h">
       <Filter>image</Filter>
     </ClInclude>
     <ClInclude Include="image\vixel.h">
+      <Filter>image</Filter>
+    </ClInclude>
+    <ClInclude Include="image\VixelRender.h">
       <Filter>image</Filter>
     </ClInclude>
   </ItemGroup>

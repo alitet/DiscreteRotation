@@ -11,24 +11,45 @@ struct sDimx
 	int16_t maxh;
 };
 
-struct sPix 
+//struct sPix 
+//{
+//	int16_t xo;
+//	int16_t yo;
+//	uint16_t percent;
+//};
+
+struct sPix
 {
-	int16_t xo;
-	int16_t yo;
-	uint16_t percent;
+	Color acol;
+	Color bcol;
+	uint8_t aper;
+	uint8_t bper;
 };
 
-struct sVixel
-{
-	std::vector<sPix> vAportes;
-};
+//struct sVixel
+//{
+//	std::vector<sPix> vAportes;
+//};
 
 class sPixelImage
 {
 public:
 	sPixelImage(const char* fname);
-	//Color getPixel(int16_t x, int16_t y) const;
-	//void setPixel(int16_t x, int16_t y, Color color);
+	sPixelImage(uint16_t w, uint16_t h);
+
+	~sPixelImage() = default;
+
+	sPix getPixel(int16_t x, int16_t y) const;
+	Color getPixelMerge(int16_t x, int16_t y) const;
+
+	//void setPixel(int16_t x, int16_t y, Color pix);
+	void setPixelMerge(int16_t x, int16_t y, sPix pix);
+
+	sDimx getImageDims() const { return dims; }
+
+	bool isKeyColor(const Color& clr) const;
+	void clearAllPixel();
+
 	//void setPixel(uint16_t index, Color color);
 
 	//Color getPixelLowLeft(int16_t x, int16_t y) const;
@@ -40,8 +61,11 @@ public:
 	//sDims getImageDims() const { return dims; }
 
 private:
+	Color mixColorPixs(sPix piz) const;
 
-	std::vector<Color> pixeles;
+private:
+
+	std::vector<sPix> pixels;
 	int16_t ws;
 	int16_t hs;
 

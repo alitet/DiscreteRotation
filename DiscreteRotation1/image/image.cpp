@@ -1,6 +1,7 @@
 #include "image.h"
 #include <iostream>
 #include <cmath>
+//#include "vixel.h"
 
 sImgData::sImgData(int16_t w, int16_t h)
 {

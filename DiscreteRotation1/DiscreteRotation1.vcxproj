@@ -21,9 +21,11 @@
   <ItemGroup>
     <ClCompile Include="core\main.cpp" />
     <ClCompile Include="image\vixel.cpp" />
+    <ClCompile Include="image\VixelRender.cpp" />
     <ClInclude Include="image\image.h" />
     <ClCompile Include="image\image.cpp" />
     <ClInclude Include="image\vixel.h" />
+    <ClInclude Include="image\VixelRender.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
