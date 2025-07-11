@@ -13,6 +13,6 @@ public:
 private:
 	uint16_t screnw;
 	uint16_t screnh; 
-	uint16_t gap;
+	uint16_t mGap;
 };
 
