@@ -1,5 +1,6 @@
 #include "..\raylib\raylib.h"
 #include "..\image\image.h"
+#include "..\image\VixelRender.h"
 #include <iostream>
 
 int main()
@@ -24,6 +25,9 @@ int main()
   sImgData canvarr = GetCanvasImage(pxarr);
   sImgData canvarr2 = GetCanvasImage(pxarr);
   sImgData canvabaj = GetCanvasImageFull(pxarr);
+
+	sPixelImage pximg("resources/cone10p10.png");
+	VixelRender vixrend(scW, scH, 10);
   
   rotateForward(pxarr, canvarr, 0.f);
   rotateBackward(pxarr, canvarr2, 0.f);
@@ -69,11 +73,14 @@ int main()
     DrawText("Discrete Grid Rotation", 10, 10, 10, DARKGRAY);
 
     //DrawImageCenter(scW, scH, 10, canvarr);// pxarr);// mvarrFW);
-    DrawImageCenterAtPos(scW, scH, 10, canvarr, FWDX, FWDY);
+    //DrawImageCenterAtPos(scW, scH, 10, canvarr, FWDX, FWDY);
 
-    DrawImageCenterAtPos(scW, scH, 10, canvarr2, BCKX, FWDY);
+    //DrawImageCenterAtPos(scW, scH, 10, canvarr2, BCKX, FWDY);
 
-    DrawImageBottomLeft(scW, scH, 10, canvabaj);
+    //DrawImageBottomLeft(scW, scH, 10, canvabaj);
+
+    vixrend.DrawImageCenter(pximg);
+    //DrawRectangle(400, 300 - 10, 10, 10, WHITE);
 
     DrawCenterRefCross(scW, scH, 10);
     EndDrawing();

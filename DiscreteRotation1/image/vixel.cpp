@@ -90,7 +90,7 @@ Color sPixelImage::mixColorPixs(sPix piz) const
     uint8_t mgvl = static_cast<uint8_t>(roundf(cmvl));
     cmerg[i] = mgvl > 255 ? 255 : mgvl;
   }
-  return Color{ cmerg[0], cmerg[1], cmerg[2] };
+  return Color{ cmerg[0], cmerg[1], cmerg[2], 255 };
 }
 
 
