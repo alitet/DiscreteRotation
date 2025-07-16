@@ -26,8 +26,8 @@ int main()
   sImgData canvarr2 = GetCanvasImage(pxarr);
   sImgData canvabaj = GetCanvasImageFull(pxarr);
 
-	sPixelImage pximg("resources/cone10p10.png");
-	VixelRender vixrend(scW, scH, 10);
+	//sPixelImage pximg("resources/cone10p10.png");
+	//VixelRender vixrend(scW, scH, 10);
   
   rotateForward(pxarr, canvarr, 0.f);
   rotateBackward(pxarr, canvarr2, 0.f);
@@ -75,11 +75,12 @@ int main()
     //DrawImageCenter(scW, scH, 10, canvarr);// pxarr);// mvarrFW);
     //DrawImageCenterAtPos(scW, scH, 10, canvarr, FWDX, FWDY);
 
+    DrawImageCenter(scW, scH, 10, canvarr2);
     //DrawImageCenterAtPos(scW, scH, 10, canvarr2, BCKX, FWDY);
 
     //DrawImageBottomLeft(scW, scH, 10, canvabaj);
 
-    vixrend.DrawImageCenter(pximg);
+    //vixrend.DrawImageCenter(pximg);
     //DrawRectangle(400, 300 - 10, 10, 10, WHITE);
 
     DrawCenterRefCross(scW, scH, 10);
