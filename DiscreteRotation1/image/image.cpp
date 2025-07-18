@@ -199,6 +199,65 @@ void rotateForward(const sImgData& imgIN, sImgData& cnvOUT, float deg)
   }
 }
 
+bool validatePixel(const sImgData& imgIN, int16_t x, int16_t y, Color &lcolor)
+{
+  sDims dmsIN = imgIN.getImageDims();
+  lcolor = BLACK;
+  if (x >= -dmsIN.minw && x < dmsIN.maxw &&
+    y >= -dmsIN.minh && y < dmsIN.maxh)
+  {
+    Color clrr = imgIN.getPixel(x, y);
+    if (isKeyColor(clrr)) { return false; }
+		lcolor = clrr;
+  }
+	return true;
+}
+
+bool isMergePixel(const sImgData& imgIN, float x, float y) 
+{
+  float decx = x - floorf(x);
+  if (decx > 0.2f && decx < 0.8f) { return true; }
+  float decy = y - floorf(y);
+  if (decy > 0.2f && decy < 0.8f) { return true; }
+	return false;
+}
+
+bool getSinglePixel(const sImgData& imgIN, float x, float y, Color& color)
+{
+  Color lclr = BLACK;
+  int16_t cx = static_cast<int16_t>(roundf(x));
+  int16_t cy = static_cast<int16_t>(roundf(y));
+  if (validatePixel(imgIN, cx, cy, lclr)) {
+    color = lclr;
+    return true;
+  }
+  return false;
+}
+
+std::vector<Color> getMergePixels(const sImgData& imgIN, float x, float y)
+{
+  std::vector<Color> retvec;
+  int16_t florx = static_cast<int16_t>(floorf(x));
+  int16_t ceilx = static_cast<int16_t>(ceilf(x));
+
+  int16_t flory = static_cast<int16_t>(floorf(y));
+  int16_t ceily = static_cast<int16_t>(ceilf(y));
+
+	Color florclr, ceilclr;
+	bool fpi = validatePixel(imgIN, florx, flory, florclr);
+	bool cpi = validatePixel(imgIN, ceilx, flory, ceilclr);
+  if (fpi && cpi) {
+    retvec.push_back(florclr);
+    retvec.push_back(ceilclr);
+  }
+  else {
+    if (getSinglePixel(imgIN, x, y, florclr)) {
+      retvec.push_back(florclr);
+    }
+  }
+	return retvec;
+}
+
 void rotateBackward(const sImgData& imgIN, sImgData& cnvOUT, float deg)
 {
   cnvOUT.clearAllPixel();
@@ -213,15 +272,49 @@ void rotateBackward(const sImgData& imgIN, sImgData& cnvOUT, float deg)
     for (int16_t i = -dmsOUT.minw; i < dmsOUT.maxw; i++) {
       float fx = (i * cosdg) + (j * sindg);
       float fy = (i * -sindg) + (j * cosdg);
-      int16_t cx = static_cast<int16_t>(roundf(fx));
-      int16_t cy = static_cast<int16_t>(roundf(fy));
 
-      if (cx >= -dmsIN.minw && cx < dmsIN.maxw && 
-          cy >= -dmsIN.minh && cy < dmsIN.maxh)
-      {
-        Color lcolor = imgIN.getPixel(cx, cy);
-        cnvOUT.setPixel(i, j, lcolor);
+      if (isMergePixel(imgIN, fx, fy)) {
+				auto cvec = getMergePixels(imgIN, fx, fy);
+        if (cvec.size() > 0) {
+
+        }
       }
+      else {
+        Color sinclr;
+        if (getSinglePixel(imgIN, fx, fy, sinclr)) {
+
+        }
+      }
+
+   //   int16_t cx = static_cast<int16_t>(roundf(fx));
+   //   int16_t cy = static_cast<int16_t>(roundf(fy));
+			//int16_t lx = cx; int16_t ly = cy;
+			//bool merge = false;
+
+			//float decx = fx - floorf(fx);
+   //   if (decx > 0.2f && decx < 0.8f) {
+   //     lx = static_cast<int16_t>(floorf(fx));
+   //     cx = static_cast<int16_t>(ceilf(fx));
+   //     merge = true;
+   //   }
+
+   //   float decy = fy - floorf(fy);
+   //   if (decy > 0.2f && decy < 0.8f) {
+   //     ly = static_cast<int16_t>(floorf(fy));
+   //     cy = static_cast<int16_t>(ceilf(fy));
+   //     merge = true;
+   //   }
+
+   //   if (merge) {
+
+   //   }
+
+   //   if (cx >= -dmsIN.minw && cx < dmsIN.maxw && 
+   //       cy >= -dmsIN.minh && cy < dmsIN.maxh)
+   //   {
+   //     Color lcolor = imgIN.getPixel(cx, cy);
+   //     cnvOUT.setPixel(i, j, lcolor);
+   //   }
     }
   }
 }
